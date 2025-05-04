@@ -13,7 +13,7 @@ class User(db.Model):
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     favoritos: Mapped[List["Favorito"]] = relationship(
-        back_populates="User"
+        back_populates="favorite"
     )
     
 
@@ -25,12 +25,11 @@ class Planeta(db.Model):
     film_appearance: Mapped[str] = mapped_column(String(120), nullable=False)
     exploted: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     population: Mapped[int] = mapped_column(Integer(), nullable=False)
-    personaje_id:Mapped[int] = mapped_column(ForeignKey("personajes.personaje_id"), nullable=True)    
     personaje: Mapped[List["Personaje"]] = relationship(
         back_populates="planetas",
     )
     favoritos: Mapped[List["Favorito"]] = relationship(
-        back_populates="planetas",
+        back_populates="favorite_planet",
     )
 
 class Personaje(db.Model):
@@ -41,11 +40,12 @@ class Personaje(db.Model):
     coalition: Mapped[str] = mapped_column(String(120), nullable=False)
     race: Mapped[str] = mapped_column(String(120), nullable=False)
     age: Mapped[int] = mapped_column(nullable=False)
-    planeta: Mapped['Planeta'] = relationship(
+    planeta_id:Mapped[int] = mapped_column(ForeignKey("planetas.planeta_id"), nullable=True)
+    planeta: Mapped[List['Planeta']] = relationship(
         back_populates="personaje",
     )
     favoritos: Mapped[List["Favorito"]] = relationship(
-        back_populates="personaje",
+        back_populates="favorite_person",
     )
 
 
@@ -56,13 +56,13 @@ class Favorito(db.Model):
     planeta_id:Mapped[int] = mapped_column(ForeignKey("planetas.planeta_id"), nullable=True)
     personaje_id:Mapped[int] = mapped_column(ForeignKey("personajes.personaje_id"), nullable=True)    
     favorite: Mapped['User'] = relationship(
-        back_populates="favorito",
+        back_populates="favoritos",
     )
     favorite_person: Mapped['Personaje'] = relationship(
-        back_populates="favorito",
+        back_populates="favoritos",
     )
     favorite_planet: Mapped['Planeta'] = relationship(
-        back_populates="favorito",
+        back_populates="favoritos",
     )
 
 
